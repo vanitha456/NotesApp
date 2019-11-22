@@ -1,0 +1,16 @@
+<div class="bs-example">
+    <nav class="navbar navbar-expand-md navbar-light ">
+        <a  class="navbar-brand text-white"><i class="fa fa-map font"  aria-hidden="true"></i> Notes App</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+            <div class="navbar-nav">
+                <a  class="nav-item nav-link active text-white">Well come !! <b>{{userName}}</b></a>
+            </div>
+            <div class="navbar-nav">
+                <a  class="nav-item nav-link pointer text-white" (click)="logout()">Logout</a>
+            </div>
+        </div>
+    </nav>
+</div>

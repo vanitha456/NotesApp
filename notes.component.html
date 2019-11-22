@@ -1,0 +1,106 @@
+<div class="wrapper" >
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Notes List</h3>
+        </div>
+        <ul class="list-unstyled components " >
+            <li *ngIf="showMessage">Currently There is no Notes to display</li>
+            <li class="list-unstyled components "  *ngFor="let note of dispalyNoteonSidebar | grdFilter: {title: searchText, description:searchText}">
+                <a (click)="selectNote(note)">{{note.title}}</a>
+                <p >{{note.date| timeAgo}}</p>
+                <div class="line"></div>
+            </li>
+        </ul>
+    </nav>
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light ">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <form class="form-inline ">
+                    <div class="input-group">                    
+                        <input type="text" class="form-control" name="searchText" [(ngModel)]="searchText" placeholder="Search..">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-info"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                            </form>
+                        </li>
+                        <li class="nav-item active">
+                            <button class="btn btn-sm btn-outline-primary mrg_10L" (click)="editNote()">Edit <i class="fa fa-edit" aria-hidden="true"></i></button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-sm btn-outline-warning mrg_10L" (click)="deleteNote()">Delete <i class="fa fa-trash" aria-hidden="true"></i></button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-sm btn-outline-success mrg_10L" (click)="createNote()">Create <i class="fa fa-book" aria-hidden="true"></i></button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-sm btn-outline-info mrg_10L" (click)="readNote()">Read <i class="fa fa-folder-open"></i></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="mrg_20T text-danger" *ngIf="showMessage">Currently There is no Notes to display. Please write a note by clicking create note button</div>
+        <div class="card calendar-groot blue" *ngIf="createNoteBook"  >
+            <form class="mrg_20T" #createNote="ngForm" (ngSubmit)="submitted  && createNotesData();createNote.reset() ">
+                  <div class="calendar-date "></div>
+                <div class="card-body calendar-groot">
+                    <h5 class="card-title calendar-groot">Create Your Note</h5>
+                    <div class="form-Group col-md-6">
+                    <input class="form-control" type="text" name="title" placeholder="Note title" [(ngModel)]="note.title" #title="ngModel">
+                    </div>
+                    <div class="form-Group col-md-12 mrg_20T">
+                        <textarea class="form-control" type="text" name="description" rows="10" cols="50" placeholder="Enter Your Note here.." [(ngModel)]="note.description" #description="ngModel"></textarea></div>
+                    <button class="btn btn-info align-center mrg_20T" (click)="submitted = true" >Save Note</button>
+                </div>
+            </form>
+        </div>
+        <div class="container-fluid mrg_20T" *ngIf="readNoteBook" >
+            <div class="card calendar-groot blue" *ngFor="let note of displayNotes | grdFilter: {title: searchText, description:searchText}">
+                 <div class="calendar-date mrg_10L"><i class="fas fa-user-circle"></i></div>
+                <div class="card-body calendar-groot">
+                    <h5 class="card-title calendar-groot">{{note.title}}</h5>
+                    <p class="card-text calendar-groot text-white">{{note.description}}</p>
+                </div>
+                <div class="calendar-poster">Created at: {{note.date | date: 'dd/MM/yyyy'}}</div>
+            </div>
+        </div>
+        <div *ngIf="showSuccessMessage" class="text-success mrg_20T">Your Note saved successfully click read button to read your Note</div>
+        <div class="container-fluid" *ngIf="deleteNoteBook">
+            <div class="card calendar-groot blue" *ngFor="let note of displayNotes | grdFilter: {title: searchText, description:searchText}">
+                 <div class="calendar-date mrg_10L"><i class="fas fa-user-circle"></i></div>
+                <div class="card-body calendar-groot">
+                    <h5 class="card-title calendar-groot">{{note.title}}</h5>
+                    <p class="card-text calendar-groot text-white">{{note.description}}</p>
+                </div>
+                <button class="btn btn-info btn-sm" (click)="deleteNoteBookdata(note)">Are you sure you want to delete this note Please click here =></button>
+            </div>
+        </div>
+        <div class="text-success mrg_20T">{{showMessageforSuccess}}</div>
+        <div class="container-fluid" *ngIf="editNoteBook">
+            <div class="card calendar-groot blue" *ngFor="let note of displayNotes| grdFilter: {title: searchText, description:searchText}; let in = index">
+                 <div class="calendar-date mrg_10L"><i class="fas fa-user-circle"></i></div>
+                <div class="card-body calendar-groot">
+                    <input type="text" class="form-control col-md-5 mrg_20T" name="title{{in}}" value="{{note.title}}" [ngModel]="note.title"  #title="ngModel">
+                    <textarea class="form-control col-md-9 mrg_20T" name="description{{in}}" value="{{note.description}}"  [ngModel]="note.description"  #description="ngModel" rows="5"></textarea>
+                    <button class="btn btn-info btn-sm mrg_20T" (click)="updateNoteBook(note)">Update</button>
+                </div>
+                <div class="calendar-poster">Created at: {{note.date | date: 'dd/MM/yyyy'}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
